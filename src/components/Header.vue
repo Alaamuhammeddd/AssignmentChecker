@@ -8,11 +8,23 @@
       />
       <h1 class="assignment-header__title">Assignment Checker</h1>
     </div>
-    <AddButton />
+    <AddButton
+      :inProgressTasks="inProgressTasks"
+      @update:inProgressTasks="$emit('update:inProgressTasks', $event)"
+    />
   </section>
 </template>
 <script setup>
 import AddButton from "./AddButton.vue";
+
+defineProps({
+  inProgressTasks: {
+    type: Array,
+    required: true,
+  },
+});
+
+defineEmits(["update:inProgressTasks"]);
 </script>
 <style scoped lang="scss">
 @use "../styles/__variables" as *;

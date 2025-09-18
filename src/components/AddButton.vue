@@ -1,3 +1,37 @@
+<template>
+  <div class="addTask">
+    <button class="assignment-header__button" @click="openModal">
+      Add Task
+    </button>
+    <TaskModal
+      v-show="isModalOpen"
+      @close-modal="isModalOpen = false"
+      @add-task="handleAddTask"
+    />
+  </div>
+</template>
+<script setup>
+import { ref } from "vue";
+import TaskModal from "./TaskModal.vue";
+const isModalOpen = ref(false);
+const props = defineProps({
+  inProgressTasks: {
+    type: Array,
+    required: true,
+  },
+});
+const emit = defineEmits(["update:inProgressTasks"]);
+
+const openModal = () => {
+  isModalOpen.value = true;
+};
+
+const handleAddTask = (task) => {
+  const updatedTasks = [...props.inProgressTasks, task];
+  emit("update:inProgressTasks", updatedTasks);
+  isModalOpen.value = false;
+};
+</script>
 <style scoped lang="scss">
 @use "../styles/__variables" as *;
 .assignment-header__button {
@@ -15,20 +49,3 @@
   }
 }
 </style>
-<template>
-  <div class="addTask">
-    <button class="assignment-header__button" @click="openModal">
-      Add Task
-    </button>
-    <TaskModal v-if="isModalOpen" />
-  </div>
-</template>
-<script setup>
-import { ref } from "vue";
-import TaskModal from "./TaskModal.vue";
-const isModalOpen = ref(false);
-const openModal = () => {
-  isModalOpen.value = true;
-  console.log(isModalOpen.value);
-};
-</script>

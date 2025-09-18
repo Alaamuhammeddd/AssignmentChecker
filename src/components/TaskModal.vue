@@ -1,14 +1,40 @@
+<script setup>
+import { ref } from "vue";
+const emit = defineEmits(["close-modal", "add-task"]);
+const taskName = ref("");
+
+const handleClose = () => {
+  emit("close-modal");
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  if (taskName.value.trim()) {
+    emit("add-task", {
+      id: Date.now(),
+      name: taskName.value,
+      status: "in-progress",
+    });
+    taskName.value = "";
+    handleClose();
+  }
+};
+</script>
 <template>
   <div class="task-modal">
+    <button @click="handleClose">X</button>
     <h2 class="task-modal__title">Add Task</h2>
-    <form class="task-modal__form">
+    <form class="task-modal__form" @submit="handleSubmit">
       <div class="task-modal__form-group">
         <label class="task-modal__form-group-label">Task Name</label>
-        <input class="task-modal__form-group-input" type="text" />
+        <input
+          v-model="taskName"
+          class="task-modal__form-group-input"
+          type="text"
+        />
       </div>
+      <button class="task-modal__button" type="submit">Add Task</button>
     </form>
-    <button class="task-modal__button">Add Task</button>
-    <button class="task-modal__button">Cancel</button>
   </div>
 </template>
 <style scoped lang="scss">
@@ -18,6 +44,13 @@
   color: $white-text-color;
   padding: 20px;
   border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  min-width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .task-modal__title {
   font-size: 24px;
